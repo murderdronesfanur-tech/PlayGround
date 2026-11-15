@@ -67,20 +67,45 @@ function drawPickup(o){let p=1-o.z,y=100+p*p*166,x=240+(o.x-bikeX*.26)*p*1.8,s=.
 function drawBike(){
  let x=240+bikeX*63,y=221+(Math.abs(bikeX)*3),lean=clamp(speed/100,0,1)*bikeX*.08;
  ctx.save();ctx.translate(x,y);ctx.rotate(lean);
- // headlight glow
- let beam=ctx.createRadialGradient(0,-29,2,0,-29,45);beam.addColorStop(0,'#ffb85b42');beam.addColorStop(1,'#ffb85b00');ctx.fillStyle=beam;ctx.fillRect(-48,-75,96,60);
- // wheels
- rect(-12,-16,7,16,'#100e17');rect(5,-16,7,16,'#100e17');rect(-10,-14,3,12,'#777184');rect(7,-14,3,12,'#777184');
- // bike body black violet
- poly([[-13,-16],[-8,-24],[0,-26],[11,-19],[9,-14],[-4,-13]],'#16131f');poly([[-8,-23],[-1,-28],[7,-24],[8,-19],[-5,-19]],'#76265f');poly([[-5,-22],[0,-26],[5,-23],[3,-21]],'#b43a7d');
- // forks / handlebars
- line(-8,-21,-11,-30,'#a8a1b0',2);line(7,-22,11,-31,'#a8a1b0',2);line(-13,-31,13,-31,'#292632',2);rect(-2,-30,4,3,'#fff0b0');
- // rider torso
- poly([[-8,-26],[-10,-39],[-5,-46],[6,-43],[10,-30],[4,-25]],'#171321');poly([[-7,-37],[-5,-44],[5,-42],[8,-34],[1,-31]],'#582154');
- // helmet
- rect(-6,-51,12,10,'#14111d');rect(-4,-54,9,6,'#2b1d32');rect(2,-49,5,3,'#58e2e0');rect(-5,-42,10,2,'#ff397d');
- // tail glow
- rect(-10,-19,3,4,'#ff397d');rect(8,-19,3,4,'#ff397d');
+ // Soft road shadow and warm headlamp spill
+ ctx.fillStyle='#080710aa';ctx.beginPath();ctx.ellipse(0,-2,18,4,0,0,Math.PI*2);ctx.fill();
+ let beam=ctx.createRadialGradient(0,-31,2,0,-31,46);beam.addColorStop(0,'#ffca7148');beam.addColorStop(1,'#ffb85b00');ctx.fillStyle=beam;ctx.fillRect(-48,-80,96,70);
+ // Rear tire, chunky pixel tread, rim and axle
+ rect(-6,-17,12,18,'#090a12');rect(-4,-16,8,16,'#30303d');rect(-2,-15,4,14,'#777685');
+ for(let yy=-15;yy<0;yy+=4){rect(-6,yy,2,2,'#55525f');rect(4,yy,2,2,'#55525f')}
+ rect(-2,-11,4,5,'#272633');rect(-1,-10,2,3,'#aaa5b3');
+ // Swingarm and chain
+ poly([[-9,-17],[-5,-20],[5,-20],[9,-17],[5,-15],[-5,-15]],'#24222f');line(-5,-17,5,-17,'#bd8b55',1);
+ // Front tire and fork tubes
+ rect(-4,-37,8,13,'#0a0a12');rect(-2,-36,4,11,'#484653');rect(-1,-35,2,9,'#a09aa8');
+ line(-4,-34,-7,-20,'#b3aebb',2);line(4,-34,7,-20,'#777382',2);
+ // Layered black-violet fairing and engine block
+ poly([[-5,-20],[-8,-24],[-6,-29],[-3,-31],[3,-30],[8,-25],[7,-19],[3,-16],[-3,-16]],'#11111b');
+ poly([[-8,-25],[-6,-30],[-2,-32],[5,-30],[8,-26],[4,-24],[-4,-24]],'#702256');
+ poly([[-5,-27],[-2,-30],[4,-29],[6,-27],[1,-26]],'#a52f72');
+ poly([[-5,-22],[-2,-25],[4,-24],[5,-21],[2,-18],[-3,-18]],'#201a2a');
+ // Seat, tank ridge, fasteners and side vents
+ poly([[-5,-31],[-4,-34],[4,-34],[6,-30],[3,-29],[-4,-29]],'#15131f');
+ rect(-2,-29,4,2,'#383040');rect(-5,-24,2,2,'#d94b91');rect(4,-24,2,2,'#d94b91');
+ line(-3,-27,0,-29,'#ed75b2',1);line(0,-29,3,-27,'#ed75b2',1);
+ // Handlebars, grips, mirrors and twin cowl lights
+ line(-3,-34,-10,-38,'#b8b2bf',2);line(3,-34,10,-38,'#8e8999',2);line(-13,-38,13,-38,'#33313f',2);
+ rect(-14,-39,4,2,'#ff397d');rect(10,-39,4,2,'#59f4e3');
+ rect(-5,-36,3,2,'#fff0bd');rect(2,-36,3,2,'#fff0bd');rect(-2,-37,4,2,'#ffcf76');
+ // Boots and arms reaching for the bars
+ poly([[-7,-25],[-3,-27],[0,-24],[-2,-21],[-7,-21]],'#17151f');poly([[2,-24],[5,-27],[8,-25],[7,-21],[2,-21]],'#211a2a');
+ line(-6,-43,-10,-39,'#24202d',4);line(6,-43,10,-39,'#302137',4);line(-7,-42,-10,-39,'#8a4678',2);line(7,-42,10,-39,'#8a4678',2);
+ // Armored jacket with violet panels and back seam
+ poly([[-7,-44],[-10,-39],[-8,-35],[-6,-32],[-4,-27],[4,-27],[7,-33],[9,-39],[6,-44],[3,-47],[-4,-47]],'#17131f');
+ poly([[-7,-42],[-4,-45],[0,-43],[0,-30],[-4,-29],[-7,-35]],'#53204f');
+ poly([[2,-43],[5,-44],[7,-39],[5,-33],[2,-31]],'#302035');
+ line(0,-42,0,-29,'#a93b78',1);rect(-4,-38,2,3,'#e3549e');rect(3,-36,2,2,'#8b4e9a');
+ // Faceted helmet, luminous visor and signature stripe
+ poly([[-7,-48],[-6,-54],[-3,-57],[3,-57],[7,-53],[7,-47],[4,-44],[-4,-44]],'#0c0d16');
+ poly([[-5,-53],[-2,-56],[3,-55],[5,-52],[2,-51],[-4,-51]],'#29233a');
+ rect(-5,-51,10,3,'#56e8e1');rect(-4,-50,7,1,'#c7ffff');rect(-6,-46,12,2,'#ff397d');rect(-4,-44,8,1,'#a92c71');
+ // Tail lamp and slim rear indicators
+ rect(-4,-16,8,3,'#ff397d');rect(-2,-16,4,1,'#ffd3e4');rect(-11,-18,3,2,'#ffb18d');rect(8,-18,3,2,'#ffb18d');
  ctx.restore();
 }
 function drawPoliceChase(){if(heat<2)return;let pulse=(Math.sin(t*.018)+1)/2;drawCar(240+Math.sin(t*.001)*3,260,1.3,'',true);rect(208,245,65,4,pulse>.5?'#ff397d55':'#5eeeff44')}
