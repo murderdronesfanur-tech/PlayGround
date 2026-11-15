@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090b12">
+  <link rel="icon" href="data:,">
+  <title>Horde of the Hollow — A Midnight Massacre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="game" aria-label="Horde of the Hollow game canvas"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <header class="topbar" id="topbar" hidden>
+    <div class="brand-mark"><span class="brand-icon">✦</span><span>THE HOLLOW</span></div>
+    <div class="run-stats">
+      <div class="stat-chip"><span class="stat-label">NIGHT</span><strong id="timer">00:00</strong></div>
+      <div class="stat-chip"><span class="stat-label">SOULS TAKEN</span><strong id="kills">0</strong></div>
+      <div class="stat-chip"><span class="stat-label">THE SWARM</span><strong id="swarm-count">05</strong></div>
+    </div>
+    <button class="icon-button" id="pause-button" aria-label="Pause game">Ⅱ</button>
+  </header>
+  <section class="game-hud" id="game-hud" hidden aria-label="Game status">
+    <div class="health-row"><span class="hud-label">HIVE HEART</span><span id="health-text">100 / 100</span></div>
+    <div class="meter health-meter"><div id="health-fill"></div></div>
+    <div class="xp-row"><span class="hud-label">ESSENCE <b id="level-text">LV 1</b></span><span id="xp-text">0 / 8</span></div>
+    <div class="meter xp-meter"><div id="xp-fill"></div></div>
+    <div class="objective"><span class="objective-dot"></span><span id="objective-text">GROW THE SWARM · OUTLAST THE HUNTER</span></div>
+  </section>
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <main class="screen" id="title-screen">
+    <div class="title-copy">
+      <div class="eyebrow"><span></span> A MIDNIGHT MASSACRE</div>
+      <h1>THE<br><em>HORDE</em><br>OF THE HOLLOW</h1>
+      <p class="lead">The villagers brought pitchforks.<br>You brought <strong>everyone else.</strong></p>
+      <div class="title-actions">
+        <button class="primary-button" id="start-button"><span>UNLEASH THE SWARM</span><b>↗</b></button>
+        <div class="control-note"><span class="keycap">W</span><span class="keycap">A</span><span class="keycap">S</span><span class="keycap">D</span><span>TO MOVE</span></div>
+      </div>
+      <div class="title-foot"><span>01 — BECOME THE NIGHT</span><span>THE HUNTER COMES AT 02:00</span></div>
+    </div>
+    <div class="title-art" aria-hidden="true">
+      <div class="moon-halo"></div><div class="moon"></div>
+      <div class="grave hill-back"></div><div class="grave hill-front"></div>
+      <div class="art-grave grave-one"><i></i></div><div class="art-grave grave-two"><i></i></div><div class="art-grave grave-three"><i></i></div>
+      <div class="art-tree tree-one"><i></i></div><div class="art-tree tree-two"><i></i></div>
+      <div class="art-horde"><span class="horde-core">✦</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="art-spark spark-one">✦</div><div class="art-spark spark-two">✧</div><div class="art-spark spark-three">✦</div>
+      <div class="art-caption">THEY ARE NOT READY</div>
+    </div>
+  </main>
+
+  <section class="modal-screen" id="pause-screen" hidden>
+    <div class="modal-card pause-card"><div class="eyebrow"><span></span> CATCH YOUR BREATH</div><h2>THE NIGHT<br><em>WAITS.</em></h2><p>Your swarm is holding position.</p><button class="primary-button" id="resume-button"><span>RETURN TO THE HUNT</span><b>↗</b></button><button class="text-button" id="pause-restart">ABANDON THIS NIGHT</button></div>
+  </section>
+  <section class="modal-screen" id="upgrade-screen" hidden>
+    <div class="upgrade-wrap"><div class="eyebrow"><span></span> THE HIVE EVOLVES</div><h2>CHOOSE YOUR<br><em>EVOLUTION.</em></h2><p class="upgrade-subtitle">The night gives back what you take.</p><div class="upgrade-cards" id="upgrade-cards"></div></div>
+  </section>
+  <section class="modal-screen" id="end-screen" hidden>
+    <div class="modal-card end-card"><div class="eyebrow" id="end-eyebrow"><span></span> THE NIGHT REMEMBERS</div><h2 id="end-title">THE HUNT<br><em>IS OVER.</em></h2><p id="end-copy">The villagers will tell stories about this one.</p><div class="result-stats"><div><strong id="result-kills">0</strong><span>SOULS TAKEN</span></div><div><strong id="result-level">1</strong><span>HIVE LEVEL</span></div><div><strong id="result-time">00:00</strong><span>TIME HELD</span></div></div><button class="primary-button" id="again-button"><span>HUNT AGAIN</span><b>↗</b></button></div>
+  </section>
+  <div class="mobile-hint" id="mobile-hint" hidden>DRAG TO MOVE THE SWARM</div>
+  <script src="game.js"></script>
+</body>
+</html>
