@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="theme-color" content="#101216" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%2216%22 fill=%22%23101216%22/><text x=%2216%22 y=%2222%22 text-anchor=%22middle%22 font-size=%2222%22 fill=%22%23d5fa66%22>✳</text></svg>" />
+  <title>Night Shift — The Horde</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Night Shift home"><span class="brand-mark">✳</span><span>NIGHT<span class="brand-muted">SHIFT</span></span></a>
+      <div class="top-right"><span class="edition">FIELD REPORT <b>NO. 07</b></span><button class="sound-button" id="soundBtn" aria-label="Toggle sound">♫ <span>SOUND ON</span></button></div>
+    </header>
+
+    <section class="game-frame" aria-label="Night Shift game">
+      <canvas id="game" aria-label="Game field"></canvas>
+      <div class="game-vignette"></div>
+
+      <div class="hud top-hud" id="hud">
+        <div class="stat-group"><span class="hud-label">THE HUNT</span><strong id="timer">01:30</strong><span class="hud-caption">UNTIL DAWN</span></div>
+        <div class="objective"><span class="live-dot"></span><span id="objectiveText">THE HUNTER IS ON THE MOVE</span></div>
+        <div class="stat-group right-stat"><span class="hud-label">SWARM</span><strong><span id="unitCount">12</span><small> / 40</small></strong><div class="swarm-meter"><i id="swarmFill"></i></div></div>
+      </div>
+
+      <div class="bottom-hud" id="bottomHud">
+        <div class="ability"><span class="ability-icon">✦</span><div><b>FEED</b><small>Gather strays to grow</small></div><kbd>SPACE</kbd><div class="ability-cooldown" id="feedCooldown"></div></div>
+        <div class="hint"><span class="keycap">W</span><span class="keycap">A</span><span class="keycap">S</span><span class="keycap">D</span><span>MOVE THE HORDE</span><span class="hint-divider">·</span><span>CLICK TO RALLY</span></div>
+        <div class="health-wrap"><div class="health-label"><span>THE HUNTER</span><span id="hunterHealthText">100%</span></div><div class="health-track"><i id="hunterHealth"></i></div></div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+      <div class="overlay" id="overlay">
+        <div class="title-card">
+          <div class="eyebrow"><span class="live-dot"></span> AN UNDEAD SWARM SIMULATOR</div>
+          <h1>THE<br><em>HORDE</em></h1>
+          <p class="subtitle">A bullet heaven, from the other side.</p>
+          <div class="intro-rule"></div>
+          <p class="intro-copy">The hunter came for one of you.<br>Make sure it doesn’t leave with any.</p>
+          <div class="start-row"><button class="primary-button" id="startBtn">LEAD THE HUNT <span>↗</span></button><span class="run-time">90 SEC RUN</span></div>
+          <div class="controls-note"><span>WASD</span> MOVE <i>·</i> <span>SPACE</span> FEED <i>·</i> <span>CLICK</span> RALLY</div>
+        </div>
+        <div class="title-aside"><span>TONIGHT’S FORECAST</span><strong>100%</strong><small>CHANCE OF<br>BAD OMENS</small><span class="aside-cross">✳</span></div>
+      </div>
+
+      <div class="pause-badge" id="pauseBadge"><span>Ⅱ</span> PAUSED <button id="resumeBtn">RESUME</button></div>
+      <div class="mobile-controls" id="mobileControls"><div id="joystick" class="joystick"><i></i></div><button id="feedTouch">FEED<br><b>✦</b></button></div>
+    </section>
+
+    <footer class="footer"><span>NO ONE GETS OUT ALONE.</span><span>EST. AFTER DARK <b>✳</b></span></footer>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
