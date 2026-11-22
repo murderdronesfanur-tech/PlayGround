@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Vice County</title>
+<style>
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#08111d;font-family:Impact,"Arial Black",sans-serif;color:#fff}canvas{display:block;width:100%;height:100%}
+#ui{position:absolute;inset:0;pointer-events:none}.hud{position:absolute;text-shadow:0 2px 3px #000}.top{top:18px;right:24px;text-align:right}.top b{display:block;font-size:24px;color:#d8ff70}.top span{font-size:13px;letter-spacing:2px;color:#fff}
+#wanted{position:absolute;right:24px;top:72px;font-size:23px;color:#ffcf45}.bar{position:absolute;left:24px;bottom:28px;width:210px;height:12px;border:2px solid rgba(255,255,255,.75);transform:skew(-10deg);background:#111}.bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#f14b55,#ffc547,#88df62)}
+#mission{left:24px;top:22px;max-width:330px;padding:12px 16px;background:linear-gradient(90deg,rgba(7,17,30,.92),rgba(7,17,30,.15));border-left:4px solid #ffb52a}.eyebrow{font:700 11px Arial,sans-serif;letter-spacing:3px;color:#ffb52a}#mission h2{margin:4px 0 2px;font-size:20px;letter-spacing:1px}#mission p{margin:0;font:700 12px Arial,sans-serif;color:#d8edf5}
+#speed{right:25px;bottom:24px;font-size:39px;color:#fff}.speedunit{font:700 11px Arial,sans-serif;letter-spacing:2px;color:#ffcf45}
+#prompt{left:50%;bottom:86px;transform:translateX(-50%);font:900 13px Arial,sans-serif;padding:9px 13px;border:1px solid rgba(255,255,255,.45);background:rgba(5,12,22,.72);opacity:0;transition:.18s}.show{opacity:1!important}
+#toast{left:50%;top:22%;transform:translateX(-50%);font-size:38px;letter-spacing:2px;text-align:center;opacity:0;text-shadow:0 3px 0 #0b1830,0 0 24px #ffb52a}.toastshow{animation:toast 2.4s}@keyframes toast{0%,100%{opacity:0}12%,72%{opacity:1}}
+#menu{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 65% 40%,rgba(255,136,83,.22),transparent 25%),linear-gradient(135deg,#071525 0%,#11294d 55%,#0a6a75 100%);pointer-events:auto;text-align:center}.brand{position:absolute;left:7%;top:10%;text-align:left;transform:rotate(-3deg)}.brand h1{margin:0;font-size:clamp(54px,9vw,112px);line-height:.75;color:#ffdfaa;text-shadow:-5px 5px 0 #ec625c,7px 10px 0 #172a50}.brand h1 small{display:block;font-size:.31em;color:#71d9cf;text-shadow:-2px 2px 0 #172a50;letter-spacing:7px}.sun{position:absolute;width:280px;height:280px;right:11%;top:18%;border-radius:50%;background:linear-gradient(#ffce70,#ef6b72);box-shadow:0 0 70px rgba(255,126,105,.4)}
+#start{position:relative;margin-top:300px;border:0;background:#f6b64c;color:#10223b;padding:15px 34px;font:900 18px Arial,sans-serif;letter-transform:uppercase;box-shadow:7px 7px 0 #e46163;cursor:pointer;pointer-events:auto}#start:active{transform:translate(3px,3px);box-shadow:4px 4px 0 #e46163}
+#touch{display:none;position:absolute;inset:0}.pad{position:absolute;bottom:26px;width:150px;height:150px;border-radius:50%;pointer-events:auto}.left{left:16px}.right{right:16px}.btn{position:absolute;width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(8,20,35,.38);color:#fff;font:bold 20px Arial;display:flex;align-items:center;justify-content:center;pointer-events:auto}.lup{left:46px;top:0}.ldn{left:46px;bottom:0}.ll{left:0;top:46px}.lr{right:0;top:46px}.brake{right:10px;bottom:18px}.go{right:72px;bottom:18px}.enterbtn{left:10px;bottom:18px;font-size:12px}.actionbtn{right:10px;bottom:82px;font-size:12px}
+@media(pointer:coarse),(max-width:760px){#touch{display:block}.bar{bottom:18px}.top{top:12px}.top b{font-size:19px}.top span{font-size:10px}#mission{top:10px;left:12px;max-width:230px;padding:8px 10px}#mission h2{font-size:15px}#wanted{right:12px;top:54px;font-size:18px}#speed{display:none}.bar{left:170px;width:130px}.brand h1{font-size:58px}.sun{width:170px;height:170px;right:-40px;top:26%}}
+</style></head>
+<body>
+<canvas id="game"></canvas>
+<div id="ui">
+<div id="mission" class="hud"><div class="eyebrow">NEW CONTACT</div><h2 id="missionTitle">THE FIRST RUN</h2><p id="missionText">Find your ride near the motel</p></div>
+<div class="top hud"><span>VICE COUNTY</span><b>$<span id="cash">1,250</span></b></div><div id="wanted" class="hud">★☆☆☆☆</div>
+<div class="bar hud"><i id="health"></i></div><div id="speed" class="hud"><span id="speedValue">0</span><div class="speedunit">KM/H</div></div>
+<div id="prompt" class="hud">E — ENTER VEHICLE</div><div id="toast" class="hud">MISSION STARTED</div>
+</div>
+<div id="menu"><div class="sun"></div><div class="brand"><h1>VICE<small>COUNTY</small></h1></div><button id="start">START THE ENGINE</button></div>
+<div id="touch"><div class="pad left"><div class="btn lup" data-key="w">▲</div><div class="btn ldn" data-key="s">▼</div><div class="btn ll" data-key="a">◀</div><div class="btn lr" data-key="d">▶</div></div><div class="pad right"><div class="btn go" data-key="w">GO</div><div class="btn brake" data-key="s">BRAKE</div><div class="btn enterbtn" data-key="e">EXIT</div></div></div>
+<script>
+(()=>{'use strict';
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');let W=1280,H=720,DPR=1;
+function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;canvas.width=W*DPR;canvas.height=H*DPR;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);resize();
+const keys={};addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='e') interact()});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+document.querySelectorAll('[data-key]').forEach(b=>{const k=b.dataset.key;const on=e=>{e.preventDefault();keys[k]=true};const off=e=>{keys[k]=false};b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off)});
+const world={w:3600,h:3600};let player={x:1760,y:1760,a:0,hp:100,inCar:true,speed:0};let car={x:1760,y:1760,a:0,speed:0,color:'#d94f63'};let cam={x:0,y:0};let started=false,mission=0,cash=1250,wanted=0,wantedTime=0,last=performance.now();
+const buildings=[],palm=[],cars=[],peds=[];
+function rnd(seed){return(()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646})}
+const rand=rnd(1337);
+for(let i=0;i<90;i++){let x=250+rand()*3100,y=250+rand()*3100;if(Math.abs(x%400-200)<95||Math.abs(y%400-200)<95)i--;else buildings.push({x,y,w:90+rand()*150,h:70+rand()*130,c:['#d5a57c','#79a6a1','#e7c9a6','#9aaeb4'][i%4]})}
+for(let i=0;i<180;i++)palm.push({x:rand()*world.w,y:rand()*world.h,s:.7+rand()*0.7});
+for(let i=0;i<12;i++)cars.push({x:rand()*world.w,y:rand()*world.h,a:rand()*Math.PI*2,c:['#2dc4b7','#f2c14e','#7c8dff','#e65b72','#efefef'][i%5],speed:20+rand()*40,ai:true});
+for(let i=0;i<35;i++)peds.push({x:rand()*world.w,y:rand()*world.h,a:rand()*6.28,c:['#f5b49c','#b77957','#6d4137'][i%3],shirt:['#f7d154','#54b7a7','#ea6d68','#668bd1'][i%4],speed:8+rand()*12});
+const targets=[{x:500,y:760,name:'Harbor Heist',text:'Deliver the package to the harbor',icon:'◆'},{x:3160,y:650,name:'Beach Getaway',text:'Lose the heat at the beach',icon:'★'},{x:3050,y:3100,name:'Sunset Run',text:'Reach the mansion before sunset',icon:'◆'}];
+function roadGrid(x,y,r=70){return (Math.abs((x+200)%400-200)<r||Math.abs((y+200)%400-200)<r)}
+function collides(x,y){if(x<20||x>world.w-20||y<20||y>world.h-20)return true;for(const b of buildings)if(x>b.x-b.w/2-18&&x<b.x+b.w/2+18&&y>b.y-b.h/2-18&&y<b.y+b.h/2+18)return true;return false}
+function interact(){if(!started)return;if(player.inCar){player.inCar=false;player.x=car.x-Math.sin(car.a)*34;player.y=car.y+Math.cos(car.a)*34}else{const d=Math.hypot(player.x-car.x,player.y-car.y);if(d<65){player.inCar=true;player.x=car.x;player.y=car.y}}updatePrompt()}
+document.getElementById('start').addEventListener('click',()=>{started=true;document.getElementById('menu').style.display='none';document.getElementById('touch').style.display='block';toast('MISSION STARTED')});
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.className='hud toastshow';setTimeout(()=>e.className='hud',2500)}
+function updatePrompt(){const d=player.inCar?999:Math.hypot(player.x-car.x,player.y-car.y);const p=document.getElementById('prompt');if(d<70){p.textContent='E — ENTER VEHICLE';p.className='hud show'}else p.className='hud'}
+function update(dt){
+if(!started)return;
+if(player.inCar){
+ const forward=keys.w||keys.arrowup?1:keys.s||keys.arrowdown?-1:0;
+ const turn=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);
+ car.speed+=(forward*240-car.speed)*dt*2.2;
+ if(forward===0)car.speed*=Math.pow(.94,dt*60);
+ car.speed=Math.max(-100,Math.min(260,car.speed));
+ if(Math.abs(car.speed)>8)car.a+=turn*dt*(.018*Math.abs(car.speed)+.38)*(car.speed<0?-1:1);
+ let nx=car.x+Math.sin(car.a)*car.speed*dt,ny=car.y-Math.cos(car.a)*car.speed*dt;
+ if(!collides(nx,ny)){car.x=nx;car.y=ny}else{car.speed*=-.25;player.hp=Math.max(0,player.hp-2)}
+ player.x=car.x;player.y=car.y;
+ wantedTime+=wanted>0?dt:0;
+ if(wantedTime>9){wantedTime=0;wanted=Math.max(0,wanted-1)}
+}else{
+ let dx=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);
+ let dy=(keys.s||keys.arrowdown?1:0)-(keys.w||keys.arrowup?1:0);
+ let l=Math.hypot(dx,dy)||1;dx/=l;dy/=l;
+ let nx=player.x+dx*145*dt,ny=player.y+dy*145*dt;
+ if(!collides(nx,ny)){player.x=nx;player.y=ny}
+ if(dx||dy)player.a=Math.atan2(dy,dx)+Math.PI/2;
+}
+for(const c of cars){
+ if(c.ai){c.a+=Math.sin(performance.now*.0001+c.x)*.002;
+ let nx=c.x+Math.sin(c.a)*c.speed*dt,ny=c.y-Math.cos(c.a)*c.speed*dt;
+ if(!collides(nx,ny)){c.x=nx;c.y=ny}else c.a+=1.2}
+}
+for(const p of peds){
+ p.a+=Math.sin(performance.now*.001+p.x)*.01;
+ let nx=p.x+Math.sin(p.a)*p.speed*dt,ny=p.y-Math.cos(p.a)*p.speed*dt;
+ if(!collides(nx,ny)){p.x=nx;p.y=ny}else p.a+=2;
+}
+updatePrompt();
+document.getElementById('speedValue').textContent=Math.round(Math.abs(car.speed)*.58);
+document.getElementById('health').style.width=player.hp+'%';
+document.getElementById('wanted').textContent='★'.repeat(wanted)+'☆'.repeat(5-wanted);
+if (mission < targets.length) {
+  const t = targets[mission];
+  const dist = Math.hypot(player.x - t.x, player.y - t.y);
+  if (dist < 100) {
+    mission++;
+    cash += 2500;
+    wanted = Math.max(wanted, mission);
+    wantedTime = 0;
+    toast(mission === targets.length ? 'MISSION COMPLETE' : '+ $2,500');
+    if (mission < targets.length) {
+      document.getElementById('missionTitle').textContent = targets[mission].name.toUpperCase();
+      document.getElementById('missionText').textContent = targets[mission].text;
+    } else {
+      document.getElementById('missionTitle').textContent = 'VICE IS YOURS';
+      document.getElementById('missionText').textContent = 'All jobs completed';
+    }
+  }
+  document.getElementById('cash').textContent = cash.toLocaleString();
+}}
+function screen(x,y){return{x:x-cam.x,y:y-cam.y}}
+function draw(){ctx.clearRect(0,0,W,H);cam.x+=(player.x-W/2-cam.x)*.1;cam.y+=(player.y-H/2-cam.y)*.1;cam.x=Math.max(W/2,Math.min(world.w-W/2,cam.x));cam.y=Math.max(H/2,Math.min(world.h-H/2,cam.y));
+const sx=cam.x-W/2,sy=cam.y-H/2;
+const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#72bac1');g.addColorStop(.7,'#b8c8a4');g.addColorStop(1,'#e0b56e');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#d5c5a1';ctx.fillRect(-sx,-sy,world.w,world.h);
+ctx.fillStyle='#1d6372';ctx.fillRect(-sx,-sy,220,world.h);ctx.fillStyle='#e8d3a0';ctx.fillRect(220-sx,-sy,70,world.h);
+for(let x=200-sx;x<world.w-sx;x+=400){ctx.fillStyle='#9aa197';ctx.fillRect(x,-sy,155,world.h);ctx.fillStyle='#bfc2b1';ctx.fillRect(x+8,-sy,139,world.h);ctx.fillStyle='rgba(255,255,255,.35)';for(let y=30;y<world.h;y+=65)ctx.fillRect(x+73,y-sy,4,35)}
+for(let y=200-sy;y<world.h-sy;y+=400){ctx.fillStyle='#9aa197';ctx.fillRect(-sx,y,world.w,155);ctx.fillStyle='#bfc2b1';ctx.fillRect(-sx,y+8,world.w,139);ctx.fillStyle='rgba(255,255,255,.35)';for(let x=30;x<world.w;x+=65)ctx.fillRect(x-sx,y+73,35,4)}
+for(const b of buildings){const x=b.x-b.w/2-sx,y=b.y-b.h/2-sy;if(x<-b.w||x>W||y<-b.h||y>H)continue;ctx.fillStyle='rgba(20,35,45,.18)';ctx.fillRect(x+12,y+14,b.w,b.h);ctx.fillStyle=b.c;ctx.fillRect(x,y,b.w,b.h);ctx.fillStyle='rgba(255,255,255,.16)';ctx.fillRect(x+8,y+8,b.w-16,12);ctx.fillStyle='#3b6470';for(let wx=x+16;wx<x+b.w-8;wx+=30)for(let wy=y+30;wy<y+b.h-15;wy+=28)ctx.fillRect(wx,wy,14,14)}
+for(const p of palm){let x=p.x-sx,y=p.y-sy;if(x<-30||x>W+30||y<-30||y>H+30)continue;ctx.save();ctx.translate(x,y);ctx.scale(p.s,p.s);ctx.fillStyle='#77593c';ctx.fillRect(-3,-3,6,32);ctx.rotate(performance.now*.00003+p.x);ctx.fillStyle='#2f765b';for(let i=0;i<7;i++){ctx.rotate(Math.PI*2/7);ctx.beginPath();ctx.ellipse(15,-2,18,5,0,0,Math.PI*2);ctx.fill()}ctx.restore()}
+for(const c of cars){if(c===car)continue;const x=c.x-sx,y=c.y-sy;if(x<-40||x>W+40||y<-40||y>H+40)continue;drawCar(x,y,c.a,c.c)}
+for(const p of peds){let x=p.x-sx,y=p.y-sy;if(x<-20||x>W+20||y<-20||y>H+20)continue;ctx.save();ctx.translate(x,y);ctx.rotate(p.a);ctx.fillStyle=p.shirt;ctx.fillRect(-5,-7,10,14);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(0,-10,5,0,7);ctx.fill();ctx.restore()}
+if(mission<targets.length){const t=targets[mission],x=t.x-sx,y=t.y-sy;ctx.save();ctx.translate(x,y);ctx.fillStyle='rgba(255,181,48,.18)';ctx.beginPath();ctx.arc(0,0,52+Math.sin(performance.now*.006)*8,0,7);ctx.fill();ctx.fillStyle='#ffb52a';ctx.rotate(performance.now*.001);ctx.fillRect(-15,-15,30,30);ctx.restore()}
+drawCar(player.x-sx,player.y-sy,car.a,car.color);if(!player.inCar){ctx.save();ctx.translate(player.x-sx,player.y-sy);ctx.rotate(player.a);ctx.fillStyle='#ec6e68';ctx.fillRect(-7,-9,14,18);ctx.fillStyle='#e2ac90';ctx.beginPath();ctx.arc(0,-11,5,0,7);ctx.fill();ctx.restore()}
+requestAnimationFrame(loop)}
+function drawCar(x,y,a,c){ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(-18,-28,44,58);ctx.fillStyle=c;ctx.beginPath();ctx.roundRect(-15,-27,30,54,7);ctx.fill();ctx.fillStyle='#213a4e';ctx.fillRect(-12,-17,24,18);ctx.fillStyle='#f4e7a1';ctx.fillRect(-11,-26,7,5);ctx.fillRect(4,-26,7,5);ctx.fillStyle='#b52f3b';ctx.fillRect(-11,22,7,4);ctx.fillRect(4,22,7,4);ctx.restore()}
+function loop(now){let dt=Math.min(.033,(now-last)/1000||.016);last=now;update(dt);draw()}requestAnimationFrame(loop);
+})();
+</script></body></html>
